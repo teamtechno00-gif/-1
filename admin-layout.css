@@ -1,0 +1,171 @@
+/* layout.css — الأساسيات + الشريط الجانبي + الشريط العلوي */
+
+/* ---------- الأساسيات ---------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+:root {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Tajawal', Tahoma, sans-serif;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+/* ---------- الشريط الجانبي ---------- */
+aside {
+  width: 220px;
+  flex-shrink: 0;
+  padding: 22px 12px;
+  background: var(--side);
+  color: var(--side-text);
+}
+
+.logo {
+  padding: 0 10px 22px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 4px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  font-size: 16px;
+  text-align: right;
+  color: var(--side-text);
+  opacity: .8;
+  transition: .15s;
+}
+
+.nav:hover {
+  background: var(--side-hover);
+  opacity: 1;
+}
+
+.nav.on {                      /* التبويب المفتوح */
+  background: var(--milk);
+  color: var(--side);
+  opacity: 1;
+  box-shadow: inset -4px 0 0 var(--gold);
+}
+
+.nav svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.7;
+}
+
+/* ---------- منطقة المحتوى ---------- */
+main {
+  flex: 1;
+  min-width: 0;
+  padding: 22px;
+}
+
+/* ---------- الشريط العلوي ---------- */
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.top h1 { font-size: 22px; }
+.top p  { font-size: 14px; color: var(--muted); }
+
+.tools {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.search input {
+  width: 150px;
+  background: none;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  color: var(--text);
+}
+
+/* ---------- الجرس وقائمة الإشعارات ---------- */
+.bell {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.bell i {                      /* الرقم الصغير فوق الجرس */
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--purple);
+  color: #fff;
+  font: 700 10px/16px Tajawal;
+  font-style: normal;
+}
+
+.drop {
+  display: none;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  z-index: 5;
+  width: 260px;
+  padding: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px #0006;
+}
+
+.drop.show { display: block; }
+
+.drop div {
+  padding: 9px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.drop div:hover { background: var(--bg); }

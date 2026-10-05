@@ -1,0 +1,26 @@
+/* responsive.css — الموبايل والشاشات الصغيرة */
+
+@media (max-width: 900px) {
+  body {
+    flex-direction: column;
+  }
+
+  /* الشريط الجانبي يبقى شريط أفقي فوق */
+  aside {
+    display: flex;
+    width: 100%;
+    padding: 8px;
+    overflow-x: auto;
+  }
+
+  .logo { display: none; }
+
+  .nav {
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .g4  { grid-template-columns: 1fr 1fr; }
+  .g2,
+  .g2b { grid-template-columns: 1fr; }
+}
