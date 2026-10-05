@@ -11,7 +11,284 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>حلو الملك</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <!-- التنسيقات (CSS) -->
+  <style>
+/* ============================================================
+   style.css - تنسيق مطابق لتصميم Etoile (بألوان حلو الملك)
+   الألوان كلها من المتغيرات اللي تحت - غيّرها من مكان واحد
+   بنستخدم inline-start/end عشان الموقع ينقلب لوحده في الإنجليزي (LTR)
+   ============================================================ */
+
+/* ---------- 1) المتغيرات ---------- */
+:root {
+  --gold: #1588b8;        /* اللون الأساسي */
+  --gold-light: #4fb6da;  /* فاتح (تدرج الزراير) */
+  --gold-dark: #0e6a8f;   /* غامق (تدرج + الأسعار) */
+  --gold-bar: #019a97;    /* الشريط العلوي */
+  --cream: #e8f6fa;       /* خلفية صور المنتجات + البحث */
+  --bg: #f4fafc;          /* خلفية قسم المنتجات */
+  --text: #3a3a3a;
+  --line: #eee;
+  --dir: 1;
+}
+html[dir="ltr"] { --dir: -1; }
+
+/* ---------- 2) عام ---------- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Cairo', sans-serif; color: var(--text); background: #fff; padding-bottom: 40px; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+img { display: block; max-width: 100%; }
+.container { width: 94.2%; max-width: 1290px; margin-inline: auto; }
+.btn { display: inline-block; background: var(--gold); color: #fff; padding: 10px 28px; border-radius: 30px; font-weight: 700; }
+.ic { width: 20px; height: 20px; fill: currentColor; vertical-align: middle; }
+.ic.gold { fill: var(--gold); }
+.ic.lg { width: 30px; height: 30px; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.ph { display: grid; place-items: center; width: 100%; height: 100%; background: #e3f3f8; color: #5fa3bb; border: 2px dashed #a9d3e2; font-size: 14px; text-align: center; }
+.ph-logo { width: 132px; height: 80px; border-radius: 50%; }
+
+/* ---------- 3) الشريط العلوي ---------- */
+.topbar { background: var(--gold-bar); color: #fff; font-size: 13px; height: 34px; display: flex; align-items: center; justify-content: center; gap: 70px; }
+.topbar .ic { width: 16px; height: 16px; }
+
+/* ---------- 4) الهيدر ---------- */
+.header { border-bottom: 1px solid var(--line); box-shadow: 0 2px 10px rgba(0,0,0,.04); }
+.header-row { height: 108px; display: flex; align-items: center; gap: 24px; }
+.logo img, .logo .ph { width: 132px; height: 80px; object-fit: contain; }
+.search { width: 366px; height: 44px; display: flex; align-items: center; background: var(--cream); border-radius: 30px; padding-inline: 30px 16px; margin-inline-end: 6px; }
+.search input { flex: 1; border: 0; background: transparent; font: inherit; font-size: 15px; outline: 0; }
+.search button { border: 0; background: none; cursor: pointer; }
+.actions { display: flex; align-items: center; margin-inline-end: auto; font-size: 15.5px; }
+.act { display: flex; align-items: center; gap: 8px; padding-inline: 16px; border-inline-start: 1px solid #ddd; height: 22px; }
+.actions .act:first-child { border: 0; }
+.act em { color: var(--gold); font-style: normal; font-size: 12px; }
+.act:hover { color: var(--gold); }
+.flag { position: relative; width: 32px; height: 24px; background: linear-gradient(#ce1126 33.3%, #fff 33.3% 66.6%, #000 66.6%); display: inline-block; }
+.flag.us { background: repeating-linear-gradient(#b22234 0 2px, #fff 2px 4px); }
+.flag.us::before { content: ''; position: absolute; top: 0; inset-inline-start: 0; width: 14px; height: 13px; background: #3c3b6e; }
+
+/* ---------- 5) قائمة الأقسام ---------- */
+.nav { border-top: 1px solid var(--line); }
+.nav > ul { display: flex; justify-content: center; gap: 4px; height: 50px; align-items: center; }
+.nav > ul > li { position: relative; }
+.nav > ul > li > a { display: block; padding: 8px 12px; color: var(--gold); font-size: 15.5px; font-weight: 600; border-radius: 30px; }
+.nav > ul > li:hover > a { background: #dff2f8; }
+.drop { display: none; position: absolute; top: 100%; inset-inline-start: 0; margin-top: 6px; width: 200px; background: #fff; border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,.15); padding: 6px 0; z-index: 30; }
+.has-drop.open .drop { display: block; }
+.has-drop > a::after { content: "▾"; font-size: 10px; margin-inline-start: 5px; }
+.drop .all { font-weight: 700; color: var(--gold); }
+.drop a { display: block; padding: 11px 32px; font-size: 14px; color: #222; }
+.drop a:hover { background: var(--cream); }
+
+/* ---------- 6) سلايدر البانر ---------- */
+.slider { position: relative; margin-top: 16px; border-radius: 28px; overflow: hidden; aspect-ratio: 1287 / 560; background: #e3f3f8; box-shadow: 0 8px 24px rgba(0,0,0,.15); }
+.slides { display: flex; height: 100%; transition: transform .5s ease; direction: ltr; }
+.slide { min-width: 100%; height: 100%; }
+.slide img { width: 100%; height: 100%; object-fit: cover; }
+.arrow { position: absolute; top: 50%; translate: 0 -50%; width: 48px; height: 48px; border-radius: 50%; border: 0; background: #f4f0ea; color: #666; box-shadow: 0 2px 8px rgba(0,0,0,.2); cursor: pointer; display: grid; place-items: center; z-index: 5; }
+.arrow.prev { left: 16px; }
+.arrow.next { right: 16px; }
+.dots { position: absolute; bottom: 14px; left: 0; right: 0; display: flex; justify-content: center; gap: 8px; }
+.dots i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,.6); cursor: pointer; }
+.dots i.on { background: #fff; width: 22px; border-radius: 6px; }
+
+/* ---------- 7) الأقسام الدائرية ---------- */
+.cats { display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; padding: 34px 0 4px; }
+.cat { width: 96px; text-align: center; font-weight: 600; font-size: 14px; }
+.cat .cat-img { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; margin-bottom: 8px; }
+.cat .cat-img img { width: 100%; height: 100%; object-fit: cover; }
+.cat:hover { color: var(--gold); }
+
+/* ---------- 8) صفوف المنتجات (زي Etoile) ---------- */
+#productSections { background: var(--bg); margin-top: 44px; }
+.psec { padding: 46px 0 34px; }
+.sec-title { text-align: center; margin-bottom: 36px; }
+.sec-title .dot { display: block; width: 6px; height: 6px; margin: 0 auto 12px; background: var(--gold); rotate: 45deg; }
+.sec-title h2 { font-size: 24px; font-weight: 800; color: #222; }
+.sec-title .line { display: block; width: 84px; height: 2px; margin: 10px auto 0; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 30px; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,.04); transition: box-shadow .2s; }
+.card:hover { box-shadow: 0 8px 22px rgba(0,0,0,.1); }
+.card-img { aspect-ratio: 226 / 178; position: relative; background: var(--cream); }
+.card-img img { width: 100%; height: 100%; object-fit: cover; }
+.badge { position: absolute; top: 12px; inset-inline-start: 12px; background: linear-gradient(135deg, var(--gold-light), var(--gold-dark)); color: #fff; font-size: 10px; font-weight: 700; padding: 5px 10px; border-radius: 6px; z-index: 2; }
+.heart { position: absolute; top: 10px; inset-inline-end: 10px; width: 36px; height: 36px; border-radius: 50%; border: 0; background: #fff; display: grid; place-items: center; cursor: pointer; z-index: 2; color: #777; box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+.heart svg { width: 18px; height: 18px; fill: currentColor; }
+.heart.on { color: #e0245e; }
+.card-body { padding: 14px 16px 16px; }
+.card-body h3 { font-size: 14.5px; font-weight: 500; color: #333; margin-bottom: 8px; }
+.rate { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.stars { color: #d9d9d9; font-size: 17px; letter-spacing: 1px; line-height: 1; }
+.stars b { color: #f5b400; font-weight: 400; }
+.rcount { background: #eef0f3; color: #666; font-size: 11px; padding: 1px 7px; border-radius: 6px; }
+.stock { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 8px; border: 1px solid #bfe9cf; background: #e9f9ef; color: #1d9a57; }
+.stock::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.stock.low { background: #fdeee4; border-color: #f7cdb4; color: #e0662c; }
+.price { display: block; font-weight: 800; color: var(--gold-dark); font-size: 17px; margin: 10px 0; }
+.add { width: 100%; height: 40px; border: 0; border-radius: 12px; background: linear-gradient(135deg, var(--gold-light), var(--gold-dark)); color: #fff; font: 700 13.5px 'Cairo'; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.add .ic { width: 18px; height: 18px; }
+
+/* سلايدر المنتجات (الصف الأخير) + الدايرة الخاصة */
+.car-row { display: block; }
+.car { position: relative; flex: 1; min-width: 0; }
+.car .grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; direction: ltr; gap: 24px; padding: 4px 2px 10px; scrollbar-width: none; }
+.car .grid::-webkit-scrollbar { display: none; }
+.car .card { flex: 0 0 278px; scroll-snap-align: start; direction: rtl; }
+html[dir="ltr"] .car .card { direction: ltr; }
+.car-btn { position: absolute; top: 50%; translate: 0 -50%; width: 40px; height: 40px; border-radius: 50%; border: 0; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.22); cursor: pointer; z-index: 5; display: grid; place-items: center; color: #111; }
+.car-btn.prev { left: -8px; }
+.car-btn.next { right: -8px; }
+.car-btn:disabled { opacity: .45; box-shadow: none; cursor: default; }
+
+/* ---------- 9) البانرات الإعلانية ---------- */
+.promos { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 44px; }
+.promo { border-radius: 22px; overflow: hidden; aspect-ratio: 16 / 7; background: #e3f3f8; }
+.promo img, .promo .ph { width: 100%; height: 100%; object-fit: cover; }
+
+/* ---------- 10) الفوتر ---------- */
+.footer { background: #06434a; color: #ddd; margin-top: 60px; padding-top: 36px; }
+.foot-row { display: flex; gap: 40px; justify-content: space-between; flex-wrap: wrap; }
+.foot-row div { display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+.foot-brand { max-width: 300px; }
+.foot-brand img { width: 130px; }
+.foot-row h4 { color: var(--gold-light); margin-bottom: 4px; }
+.copy { text-align: center; font-size: 12px; padding: 22px 0; margin-top: 24px; border-top: 1px solid #1f6b73; }
+
+/* ---------- 11) Not Found ---------- */
+.nf { text-align: center; padding: 90px 0; }
+.nf[hidden] { display: none; }
+.nf-code { font-size: 140px; font-weight: 900; color: var(--gold); line-height: 1; }
+.nf h2 { font-size: 32px; margin: 6px 0; }
+.nf p { margin-bottom: 22px; color: #777; }
+
+/* ---------- 12) الكوكيز (تبويب أسود صغير) + زرار فوق ---------- */
+.ck-tab { position: fixed; bottom: 0; left: 48px; height: 34px; padding: 0 18px; background: #000; color: #fff; border: 0; border-radius: 8px 8px 0 0; font: 500 15px 'Cairo'; cursor: pointer; z-index: 70; }
+.cookies { position: fixed; bottom: 44px; left: 20px; width: 320px; max-width: calc(100% - 40px); background: #000; color: #fff; padding: 16px; border-radius: 12px; z-index: 71; direction: ltr; font-size: 14px; }
+.cookies.hide { display: none; }
+.cookies p { margin-bottom: 12px; line-height: 1.5; }
+.cookies div { display: flex; gap: 8px; }
+.cookies button { flex: 1; border: 0; padding: 10px; font: 600 14px 'Cairo'; cursor: pointer; border-radius: 8px; background: #2a2a2a; color: #fff; }
+.cookies .yellow { background: var(--gold); }
+.totop { position: fixed; bottom: 30px; inset-inline-start: 48px; width: 48px; height: 48px; border: 0; border-radius: 10px; background: rgba(95,95,95,.88); cursor: pointer; z-index: 40; display: none; place-items: center; }
+.totop.show { display: grid; }
+.totop svg { width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- 13) التابلت والموبايل ---------- */
+.burger, .overlay { display: none; }
+@media (max-width: 900px) {
+  .topbar { gap: 6px 16px; font-size: 11px; height: auto; padding: 6px 8px; flex-wrap: wrap; }
+  .header-row { height: auto; flex-wrap: wrap; justify-content: flex-start; padding: 14px 0 10px; gap: 10px 12px; }
+  .burger { order: 1; display: flex; flex-direction: column; justify-content: center; gap: 5px; width: 48px; height: 42px; padding: 0 12px; border: 1px solid #ddd; border-radius: 8px; background: #fff; cursor: pointer; }
+  .burger span { display: block; height: 2px; background: #444; border-radius: 2px; }
+  .logo { order: 2; }
+  .logo img, .logo .ph { width: 96px; height: 58px; }
+  .search { order: 3; flex: 1; width: auto; min-width: 0; margin: 0; padding-inline: 18px 14px; }
+  .actions { order: 4; width: 100%; margin: 0; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; white-space: nowrap; font-size: 13.5px; padding-bottom: 4px; scrollbar-width: none; }
+  .actions::-webkit-scrollbar { display: none; }
+  .act { flex: 0 0 auto; padding-inline: 12px; }
+  .actions .act:first-child { margin-inline-start: auto; }
+  .actions .act:last-child { margin-inline-end: auto; }
+
+  .nav { position: fixed; top: 0; bottom: 0; inset-inline-start: 0; width: 280px; max-width: 85%; background: #fff; z-index: 60; border: 0; overflow-y: auto; transform: translateX(calc(var(--dir) * 100%)); transition: transform .3s ease; box-shadow: 0 0 24px rgba(0,0,0,.25); }
+  .nav.open { transform: none; }
+  .nav > ul { flex-direction: column; align-items: stretch; justify-content: flex-start; height: auto; gap: 0; padding: 56px 0 24px; }
+  .nav > ul > li > a { padding: 14px 22px; border-radius: 0; border-bottom: 1px solid var(--line); }
+  .drop { position: static; display: none; width: auto; margin: 0; box-shadow: none; border-radius: 0; background: var(--cream); padding: 0; }
+  .has-drop.open .drop { display: block; }
+  .drop a { padding: 12px 38px; }
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 55; }
+  .overlay.show { display: block; }
+
+  .slider { aspect-ratio: 16 / 9; border-radius: 22px; }
+  .arrow { display: none; }
+  .cats { gap: 16px; }
+  .promos { grid-template-columns: 1fr; gap: 16px; margin-top: 30px; }
+  .promo { aspect-ratio: 16 / 6; border-radius: 20px; }
+
+  #productSections { margin-top: 24px; }
+  .psec { padding: 30px 0 20px; }
+  .sec-title h2 { font-size: 21px; }
+  .grid { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 10px; scrollbar-width: none; }
+  .grid::-webkit-scrollbar { display: none; }
+  .card, .car .card { flex: 0 0 220px; scroll-snap-align: start; }
+    .car-btn { width: 34px; height: 34px; }
+  .foot-row { gap: 24px; }
+  .totop { inset-inline-start: 14px; bottom: 50px; width: 42px; height: 42px; }
+}
+@media (max-width: 560px) {
+  .logo img, .logo .ph { width: 80px; height: 50px; }
+  .act { padding-inline: 9px; }
+  .actions { font-size: 12.5px; }
+  .card, .car .card { flex-basis: 180px; }
+  .card-body { padding: 10px; }
+  .card-body h3 { font-size: 13px; }
+  .price { font-size: 15px; }
+  .cat, .cat .cat-img { width: 76px; }
+  .cat .cat-img { height: 76px; }
+  .cat { font-size: 12.5px; }
+  .nf-code { font-size: 96px; }
+  .foot-row > div { flex: 1 1 140px; }
+}
+
+/* ---------- 14) النوافذ (المنتج / السلة / الحساب / الطلب) ---------- */
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 80; display: grid; place-items: center; padding: 14px; overflow-y: auto; }
+.modal[hidden], .toast[hidden] { display: none; }
+.m-box { position: relative; background: #fff; border-radius: 20px; width: 100%; max-width: 760px; padding: 26px; max-height: 92vh; overflow-y: auto; }
+.m-box.sm { max-width: 420px; }
+.m-x { position: absolute; top: 10px; inset-inline-end: 14px; border: 0; background: none; font-size: 30px; cursor: pointer; color: #888; }
+.m-box h2 { color: var(--gold); margin-bottom: 14px; font-size: 22px; }
+.m-btn { border: 0; background: var(--gold); color: #fff; font: 700 15px 'Cairo'; padding: 11px 26px; border-radius: 30px; cursor: pointer; width: 100%; margin-top: 12px; }
+.m-btn.ghost { background: #fff; color: var(--gold); border: 1px solid var(--gold); }
+.pd { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.pd-img { aspect-ratio: 1; border-radius: 16px; overflow: hidden; background: #e3f3f8; }
+.pd-img img { width: 100%; height: 100%; object-fit: cover; }
+.pd h2 { margin-top: 6px; }
+.pd .price { font-size: 24px; display: block; margin: 12px 0; }
+.qty { display: inline-flex; align-items: center; border: 1px solid #ddd; border-radius: 30px; overflow: hidden; }
+.qty button { border: 0; background: var(--cream); width: 36px; height: 36px; font-size: 20px; cursor: pointer; color: var(--gold); }
+.qty b { min-width: 38px; text-align: center; }
+.crow { display: grid; grid-template-columns: 64px 1fr auto auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.crow .t { width: 64px; height: 64px; border-radius: 12px; overflow: hidden; background: #e3f3f8; }
+.crow .t img { width: 100%; height: 100%; object-fit: cover; }
+.crow small { color: #888; display: block; }
+.del { border: 0; background: none; color: #c0392b; cursor: pointer; font: 600 13px 'Cairo'; }
+.total { display: flex; justify-content: space-between; font-size: 18px; font-weight: 700; margin-top: 16px; }
+.empty { text-align: center; color: #888; padding: 30px 0; }
+.tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.tabs button { flex: 1; border: 0; background: var(--cream); padding: 10px; border-radius: 30px; font: 700 14px 'Cairo'; cursor: pointer; color: var(--gold); }
+.tabs button.on { background: var(--gold); color: #fff; }
+.m-box label { display: block; font-size: 13px; font-weight: 600; margin: 10px 0 4px; }
+.m-box input, .m-box textarea { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 12px; font: inherit; }
+.err { color: #c0392b; font-size: 13px; margin-top: 8px; min-height: 18px; }
+.sr { display: flex; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+.sr .t { width: 52px; height: 52px; border-radius: 10px; overflow: hidden; background: #e3f3f8; }
+.sr .t img { width: 100%; height: 100%; object-fit: cover; }
+.toast { position: fixed; bottom: 80px; left: 50%; translate: -50% 0; background: #222; color: #fff; padding: 10px 22px; border-radius: 30px; z-index: 90; font-size: 14px; }
+.card { cursor: pointer; }
+@media (max-width: 640px) { .pd { grid-template-columns: 1fr; } .crow { grid-template-columns: 52px 1fr auto; } .crow .del { grid-column: 2 / 4; justify-self: start; } }
+
+/* ---------- 15) الصفحات الداخلية ---------- */
+#page { padding: 20px 0 10px; min-height: 50vh; }
+.crumb { font-size: 13px; color: #888; margin-bottom: 6px; }
+.crumb a { color: var(--gold); }
+.pg-title { color: var(--gold); font-size: 30px; margin-bottom: 18px; }
+.grid.wrap { display: grid; overflow: visible; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.info { max-width: 760px; line-height: 2; }
+.info h3 { color: var(--gold); margin-top: 14px; }
+.info form { max-width: 420px; }
+.info label { display: block; font-weight: 600; font-size: 13px; margin: 10px 0 4px; }
+.info input, .info textarea { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 12px; font: inherit; }
+.area { display: block; width: 100%; text-align: start; border: 1px solid var(--line); background: #fff; padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; font: inherit; cursor: pointer; }
+.area:hover, .area.on { background: var(--cream); color: var(--gold); border-color: var(--gold); }
+@media (max-width: 900px) { .grid.wrap { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; } .pg-title { font-size: 24px; } }
+
+/* الدواير في آخر الموقع */
+.cats-end { margin-top: 20px; }
+.cats-end .cats { padding: 40px 0 10px; }
+
+  </style>
+  <style>#upd{position:fixed;top:0;left:0;right:0;z-index:99;padding:10px;background:#E4BC4E;color:#3a2a00;text-align:center;font-weight:700;cursor:pointer}#upd[hidden]{display:none}</style>
   <!-- بنعرّف phBox بدري عشان لو صورة فشلت قبل ما script.js يتحمّل ماتطلعش أخطاء -->
   <script>function phBox(l){var d=document.createElement('div');d.className='ph';d.textContent=l||'صورة';return d;}</script>
 </head>
@@ -149,24 +426,766 @@
 
 <div class="modal" id="modal" hidden></div>
 <div class="toast" id="toast" hidden></div>
-<!-- Firebase (نسخة compat) -->
+<!-- ============ Firebase ============ -->
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-<script src="firebase.js"></script>
 <script>
-/* بنجيب الأقسام والمنتجات والبانرات من Firebase الأول، وبعدين نشغّل باقي السكريبتات بالترتيب.
-   لو Firebase مرد في 5 ثواني الموقع بيشتغل بالبيانات الافتراضية. */
+/* ---------- إعدادات Firebase ---------- */
+firebase.initializeApp({
+  apiKey: "AIzaSyCel1QXKeChW1zVhQn4I8k8lVrD5c-OX9s",
+  authDomain: "hellw-elmalek.firebaseapp.com",
+  projectId: "hellw-elmalek",
+  storageBucket: "hellw-elmalek.firebasestorage.app",
+  messagingSenderId: "742581978284",
+  appId: "1:742581978284:web:81bc15b3a2168b5ecb4b09"
+});
+const auth = firebase.auth();                       // تسجيل الدخول
+const db = firebase.firestore();                    // قاعدة البيانات
+const TS = firebase.firestore.FieldValue.serverTimestamp;   // وقت السيرفر
+// Firebase Auth بيحتاج إيميل، فرقم الموبايل بيتحوّل لإيميل داخلي (العميل مش بيشوفه)
+const phoneEmail = (p) => p + '@helwelmalek.app';
+</script>
+
+<!-- ============ كود الموقع كله (بيتشغّل بعد ما بنجيب البيانات من Firebase) ============ -->
+<script type="text/plain" id="appcode">
+/* ================================================================
+   الصفحة الرئيسية: الأقسام والمنتجات والسلايدر والسلة
+   ================================================================ */
+/* ============================================================
+   script.js - منطق الصفحة الرئيسية
+   1) بيانات الصور والأقسام والمنتجات  ← هنا بتحط مسارات صورك
+   2) رسم الصفحة
+   3) السلايدر
+   4) Not Found + السلة + الكوكيز
+   ============================================================ */
+
+/* ---------- دالة بترجّع مربع "مكان صورة" لو الصورة مش موجودة ---------- */
+function phBox(label) {
+  const d = document.createElement('div');
+  d.className = 'ph';
+  d.textContent = label || 'صورة';
+  return d;
+}
+// بتعمل <img> وبتحط مكانها placeholder لو الملف مش موجود
+function imgTag(src, label) {
+  return `<img src="${src}" alt="" onerror="this.replaceWith(phBox('${label}'))">`;
+}
+
+/* ============================================================
+   1) البيانات
+   ============================================================ */
+
+/* 🖼 صور البانر الرئيسي (السلايدر) - حط الصور في images/banners/ */
+const banners = [
+  'images/banners/banner-1.jpg',
+  'images/banners/banner-2.jpg',
+  'images/banners/banner-3.jpg'
+];
+
+/* 🖼 الأقسام الدائرية - صورة لكل قسم في images/categories/ */
+const categories = [
+  { name: 'حلويات مصرية', img: 'images/categories/1.jpg' },
+  { name: 'حلويات غربية', img: 'images/categories/2.jpg' },
+  { name: 'ميكس سويت',    img: 'images/categories/3.jpg' },
+  { name: 'مخبوزات',      img: 'images/categories/4.jpg' },
+  { name: 'شيكولاته',     img: 'images/categories/5.jpg' },
+  { name: 'كحك 2026',     img: 'images/categories/6.jpg' },
+  { name: 'المولد 2026',  img: 'images/categories/7.jpg' },
+  { name: 'آيس كريم',     img: 'images/categories/8.jpg' }
+];
+
+/* 🖼 صفوف المنتجات - كل منتج: الاسم، الاسم بالإنجليزي، القسم، القسم الفرعي، السعر، التقييم، عدد التقييمات،
+   stock (اختياري: لو كتبت رقم بيظهر "تبقى فقط N")، والصورة في images/products/
+   الصف اللي فيه carousel:true بيطلع سلايدر بأسهم */
+const sections = [
+  { title: 'الأكثر رواجًا', en: 'Best Sellers', items: [
+    { name: 'بسبوسة سادة (1/4 كيلو)', en: 'Plain Basbousa (1/4 kg)',  cat: 'حلويات مصرية', sub: 'بسبوسه',   price: 50,   rating: 3, reviews: 1, img: 'images/products/1.jpg' },
+    { name: 'عيون سادة (1/4 كيلو)',   en: 'Plain Oyoun (1/4 kg)',     cat: 'حلويات مصرية', sub: 'مكس شرقي', price: 60,   rating: 3, reviews: 1, img: 'images/products/2.jpg' },
+    { name: 'كنافة كريمة (1/4 كيلو)', en: 'Cream Kunafa (1/4 kg)',    cat: 'حلويات مصرية', sub: 'كنافه',    price: 62.5, rating: 2, reviews: 1, stock: 8,  img: 'images/products/3.jpg' },
+    { name: 'بسبوسة بندق (1/4 كيلو)', en: 'Hazelnut Basbousa (1/4 kg)', cat: 'حلويات مصرية', sub: 'بسبوسه', price: 70,   rating: 3, reviews: 1, img: 'images/products/4.jpg' },
+    { name: 'بلح الشام (1/4 كيلو)',   en: 'Balah El Sham (1/4 kg)',   cat: 'حلويات مصرية', sub: 'مكس شرقي', price: 47.5, rating: 3, reviews: 1, stock: 10, img: 'images/products/5.jpg' }
+  ]},
+  { title: 'المنتجات الجديده', en: 'New Products', items: [
+    { name: 'جلاش بالمكسرات (1/4 كيلو)', en: 'Nuts Goulash (1/4 kg)', cat: 'حلويات مصرية', sub: 'جلاش',     price: 75,  rating: 4, reviews: 2, img: 'images/products/6.jpg' },
+    { name: 'خبز الحبة الكاملة',         en: 'Whole Grain Bread',     cat: 'مخبوزات',      sub: 'خبز',      price: 45,  rating: 4, reviews: 3, img: 'images/products/7.jpg' },
+    { name: 'تشيز كيك التوت',            en: 'Berry Cheesecake',      cat: 'حلويات غربية', sub: 'تشيز كيك', price: 95,  rating: 5, reviews: 4, img: 'images/products/8.jpg' },
+    { name: 'بوكس شيكولاته فاخر',        en: 'Premium Chocolate Box', cat: 'شيكولاته',     sub: 'بوكس',     price: 210, rating: 4, reviews: 2, stock: 5, img: 'images/products/9.jpg' },
+    { name: 'كرواسون بالزبدة',           en: 'Butter Croissant',      cat: 'مخبوزات',      sub: 'كرواسون',  price: 40,  rating: 3, reviews: 1, img: 'images/products/10.jpg' }
+  ]},
+  { title: 'تشكيلة مميزة', en: 'Featured Selection', carousel: true,
+    items: [
+    { name: 'آيس كريم مانجو (نص لتر)', en: 'Mango Ice Cream (half liter)', cat: 'آيس كريم',     sub: 'نص لتر',    price: 85,  rating: 0, reviews: 0, img: 'images/products/11.jpg' },
+    { name: 'كب كيك (علبة ٦ قطع)',     en: 'Cupcakes (box of 6)',          cat: 'حلويات غربية', sub: 'كب كيك',    price: 110, rating: 0, reviews: 0, img: 'images/products/12.jpg' },
+    { name: 'دونات مشكل (علبة ٦ قطع)', en: 'Assorted Donuts (box of 6)',   cat: 'حلويات غربية', sub: 'دونات',     price: 130, rating: 0, reviews: 0, img: 'images/products/13.jpg' },
+    { name: 'تارت فواكه',              en: 'Fruit Tart',                   cat: 'حلويات غربية', sub: 'تارت',      price: 140, rating: 0, reviews: 0, img: 'images/products/14.jpg' },
+    { name: 'حلقوم وملبن (علبة هدايا)', en: 'Turkish Delight (gift box)',  cat: 'ميكس سويت',    sub: 'علب هدايا', price: 75,  rating: 0, reviews: 0, img: 'images/products/15.jpg' },
+    { name: 'تورتة شيكولاته (وسط)',    en: 'Chocolate Cake (medium)',      cat: 'حلويات غربية', sub: 'تورتات',    price: 350, rating: 0, reviews: 0, stock: 3, img: 'images/products/16.jpg' }
+  ]}
+];
+
+/* 🧭 القائمة العلوية: كل قسم له قايمة اختيارات، وكل اختيار بيفتح صفحة الصنف ده
+   لإضافة اختيار: ضيفه في subs (واسمه لازم يطابق sub في المنتجات عشان يعرض منتجاتها) */
+const menu = [
+  { name: 'الخصومات',     subs: ['عروض اليوم', 'عروض الأسبوع'] },
+  { name: 'مطعم',         subs: ['وجبات', 'سلطات', 'مشروبات'] },
+  { name: 'حلويات مصرية', subs: ['بسبوسه', 'علب مشكل', 'مكس شرقي', 'جلاش', 'اطباق', 'كنافه', 'علب شرقي جاهزة'] },
+  { name: 'حلويات غربية', subs: ['تشيز كيك', 'كب كيك', 'دونات', 'تارت', 'تورتات'] },
+  { name: 'ميكس سويت',    subs: ['علب هدايا', 'ملبن'] },
+  { name: 'مخبوزات',      subs: ['خبز', 'كرواسون', 'بسكوت'] },
+  { name: 'شيكولاته',     subs: ['بوكس', 'ألواح'] },
+  { name: 'كحك 2026',     subs: ['كحك سادة', 'كحك بالعجمية', 'كحك محشي'] },
+  { name: 'المولد 2026',  subs: ['حلاوة المولد', 'علب المولد', 'عروسة المولد'] },
+  { name: 'آيس كريم',     subs: ['نص لتر', 'كوب', 'عبوات عائلية'] }
+];
+/* ---------- بيانات Firebase (لو متاحة؛ غير كده بيشتغل بالبيانات اللي فوق) ---------- */
+sections.forEach(s => s.items.forEach(p => { p.id = p.id || p.img; }));
+window.EXTRA_EN = {};
+(function (R) {
+  if (!R) return;
+  const cfg = R.settings || {};
+  if (R.prods.length) {
+    const live = R.prods.filter(p => p.active !== false);
+    live.forEach(p => { p.en = p.en || p.name; p.rating = p.rating || 0; p.reviews = p.reviews || 0; });
+    sections.forEach(s => { s.items = live.filter(p => p.section === s.title); });
+    const rest = live.filter(p => !sections.some(s => s.title === p.section));
+    sections.push({ title: 'أخرى', en: 'Other', hidden: true, items: rest });   // بتظهر في الأقسام والبحث بس
+  }
+  if (R.cats.length) {
+    menu.length = 0; categories.length = 0;
+    R.cats.forEach(c => {
+      menu.push({ name: c.name, subs: c.subs || [] });
+      if (c.circle && c.img) categories.push({ name: c.name, img: c.img });
+      if (c.en) EXTRA_EN[c.name] = c.en;
+      (c.subs || []).forEach((x, i) => { if (c.subsEn && c.subsEn[i]) EXTRA_EN[x] = c.subsEn[i]; });
+    });
+  }
+  if (cfg.banners && cfg.banners.length) { banners.length = 0; banners.push(...cfg.banners); }
+  if (cfg.promos) {
+    const els = document.querySelectorAll('.promos .promo');
+    [cfg.promos.p1, cfg.promos.p2].forEach((u, i) => { if (u && els[i]) els[i].innerHTML = imgTag(u, 'بانر إعلاني ' + (i + 1)); });
+  }
+})(window.REMOTE);
+
+document.getElementById('navList').innerHTML = menu.map(m => `
+  <li class="has-drop">
+    <a href="#" data-nf>${m.name}</a>
+    <ul class="drop">
+      <li><a href="#" data-nf data-go="${m.name}" class="all">عرض الكل</a></li>
+      ${m.subs.map(x => `<li><a href="#" data-nf>${x}</a></li>`).join('')}
+    </ul>
+  </li>`).join('');
+
+/* ============================================================
+   2) رسم الصفحة
+   ============================================================ */
+
+// أيقونة القلب (المفضلة)
+const HEART = '<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+
+// كارت منتج واحد (نفس ترتيب Etoile: صورة + بادج + قلب / اسم / نجوم / مخزون / سعر / زرار)
+function productCard(p) {
+  const favs = JSON.parse(localStorage.getItem('hm_favs') || '[]');
+  const stars = `<span class="stars"><b>${'★'.repeat(p.rating)}</b>${'★'.repeat(5 - p.rating)}</span>`;
+  const stock = p.stock === 0 ? `<span class="stock low">نفد المخزون</span>` : (p.stock && p.stock <= 10) ? `<span class="stock low">تبقى فقط ${p.stock}</span>` : `<span class="stock">متوفر في المخزون</span>`;
+  return `
+    <article class="card" data-id="${p.id}">
+      <div class="card-img">
+        <span class="badge">${p.cat} | ${p.sub}</span>
+        <button class="heart ${favs.includes(p.id) ? 'on' : ''}" type="button" aria-label="Favorite">${HEART}</button>
+        ${imgTag(p.img, 'صورة المنتج')}
+      </div>
+      <div class="card-body">
+        <h3>${p.name}</h3>
+        <div class="rate">${stars}<span class="rcount">(${p.reviews})</span></div>
+        ${stock}
+        <span class="price">${p.price} ج.م</span>
+        <button class="add" type="button" ${p.stock === 0 ? 'disabled' : ''}><svg class="ic"><use href="#i-basket"/></svg>اضف الي عربة</button>
+      </div>
+    </article>`;
+}
+
+// الأقسام الدائرية
+document.getElementById('cats').innerHTML = categories.map(c => `
+  <a href="#" data-nf class="cat">
+    <div class="cat-img">${imgTag(c.img, c.name)}</div>${c.name}
+  </a>`).join('');
+
+// صفوف المنتجات: صف عادي (شبكة 5 كروت) أو سلايدر بأسهم + الدايرة الخاصة
+function sectionHTML(s) {
+  if (s.hidden || !s.items.length) return '';
+  const title = `<div class="sec-title"><i class="dot"></i><h2>${s.title}</h2><i class="line"></i></div>`;
+  const cards = s.items.map(productCard).join('');
+  if (!s.carousel) return `<section class="psec"><div class="container">${title}<div class="grid">${cards}</div></div></section>`;
+  return `<section class="psec"><div class="container">${title}
+    <div class="car-row">
+      <div class="car">
+        <button class="car-btn prev" type="button" aria-label="Previous"><svg class="ic"><use href="#i-left"/></svg></button>
+        <div class="grid">${cards}</div>
+        <button class="car-btn next" type="button" aria-label="Next"><svg class="ic"><use href="#i-right"/></svg></button>
+      </div>
+    </div></div></section>`;
+}
+document.getElementById('productSections').innerHTML = sections.map(sectionHTML).join('');
+
+/* ============================================================
+   3) السلايدر
+   ============================================================ */
+const slidesEl = document.getElementById('slides');
+const dotsEl = document.getElementById('dots');
+let current = 0, timer;
+
+slidesEl.innerHTML = banners.map((src, i) =>
+  `<div class="slide">${imgTag(src, 'مكان صورة البانر ' + (i + 1))}</div>`).join('');
+dotsEl.innerHTML = banners.map((_, i) => `<i data-i="${i}"></i>`).join('');
+
+function goTo(i) {
+  current = (i + banners.length) % banners.length;
+  slidesEl.style.transform = `translateX(${-current * 100}%)`;
+  [...dotsEl.children].forEach((d, k) => d.classList.toggle('on', k === current));
+}
+function autoplay() { clearInterval(timer); timer = setInterval(() => goTo(current + 1), 5000); }
+
+document.getElementById('nextBtn').onclick = () => { goTo(current + 1); autoplay(); };
+document.getElementById('prevBtn').onclick = () => { goTo(current - 1); autoplay(); };
+dotsEl.onclick = (e) => { if (e.target.dataset.i) { goTo(+e.target.dataset.i); autoplay(); } };
+goTo(0); autoplay();
+
+/* ============================================================
+   4) Not Found + السلة + الكوكيز
+   ============================================================ */
+const home = document.getElementById('home');
+const notFound = document.getElementById('notfound');
+
+function showNotFound() { home.hidden = true; notFound.hidden = false; window.scrollTo(0, 0); }
+function showHome()     { notFound.hidden = true; home.hidden = false; window.scrollTo(0, 0); }
+
+// أي عنصر عليه data-nf بيفتح Not Found
+document.addEventListener('click', (e) => {
+  if (e.target.closest('[data-nf]')) { e.preventDefault(); showNotFound(); }
+});
+document.getElementById('backHome').addEventListener('click', (e) => { e.preventDefault(); showHome(); });
+document.getElementById('logoLink').addEventListener('click', (e) => { e.preventDefault(); showHome(); });
+
+// شريط الكوكيز
+['allowCk', 'denyCk'].forEach(id =>
+  document.getElementById(id).addEventListener('click', () =>
+    document.getElementById('cookies').classList.add('hide')));
+
+/* ============================================================
+   5) الموبايل: قائمة الدرج + سحب البانر بالصباع
+   ============================================================ */
+const navEl = document.querySelector('.nav');
+const overlay = document.getElementById('overlay');
+const isMobile = () => window.innerWidth <= 900;
+function toggleMenu(open) { navEl.classList.toggle('open', open); overlay.classList.toggle('show', open); }
+document.getElementById('burger').addEventListener('click', () => toggleMenu(!navEl.classList.contains('open')));
+overlay.addEventListener('click', () => toggleMenu(false));
+navEl.addEventListener('click', (e) => { if (e.target.closest('a') && isMobile()) toggleMenu(false); });
+// سحب البانر بالصباع
+let touchX = null;
+slidesEl.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
+slidesEl.addEventListener('touchend', (e) => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 40) { goTo(current + (dx < 0 ? 1 : -1)); autoplay(); }
+  touchX = null;
+});
+
+
+/* ================================================================
+   المتجر: البحث والأقسام والنوافذ والسلة والصفحات الداخلية
+   ================================================================ */
+/* ============================================================
+   shop.js - الوظائف: تسجيل / دخول / سلة / صفحة منتج / طلب / بحث
+   الحسابات والطلبات والرسائل بتتحفظ في Firebase (shop-firebase.js). السلة والمفضلة في متصفح العميل.
+   ============================================================ */
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
+const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+
+/* ---------- الحالة ---------- */
+const allProducts = sections.flatMap(s => s.items);              // كل المنتجات من script.js
+const byId = (id) => allProducts.find(p => p.id === id);        // المنتج بيتعرف بمسار صورته
+let cartData = load('hm_cart', {});                              // { id: كمية }
+let user = load('hm_user', null);                                // المستخدم المسجّل دخول
+let afterAuth = null;                                            // اعمل إيه بعد الدخول (مثلاً كمّل الطلب)
+let detailQty = 1;
+
+/* ---------- أدوات ---------- */
+const modalEl = $('#modal');
+function openModal(html, small) {
+  modalEl.innerHTML = `<div class="m-box ${small ? 'sm' : ''}"><button class="m-x" data-act="close" aria-label="إغلاق">×</button>${html}</div>`;
+  modalEl.hidden = false; document.body.style.overflow = 'hidden';
+}
+function closeModal() { modalEl.hidden = true; modalEl.innerHTML = ''; document.body.style.overflow = ''; }
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 2000);
+}
+const thumb = (p) => imgTag(p.img, 'صورة');                      // imgTag من script.js
+const cartTotal = () => Object.entries(cartData).reduce((s, [id, q]) => s + (byId(id)?.price || 0) * q, 0);
+
+/* ---------- السلة ---------- */
+function saveCart() {
+  save('hm_cart', cartData);
+  $('#cartCount').textContent = Object.values(cartData).reduce((a, b) => a + b, 0);
+}
+function addToCart(id, n = 1) { cartData[id] = (cartData[id] || 0) + n; saveCart(); toast('تمت الإضافة للسلة ✓'); }
+
+function showCart() {
+  const rows = Object.entries(cartData).filter(([id]) => byId(id)).map(([id, q]) => {
+    const p = byId(id);
+    return `<div class="crow"><div class="t">${thumb(p)}</div>
+      <div>${esc(p.name)}<small>${p.price} ج.م</small></div>
+      <div class="qty"><button data-act="cdec" data-id="${esc(id)}">−</button><b>${q}</b><button data-act="cinc" data-id="${esc(id)}">+</button></div>
+      <button class="del" data-act="cdel" data-id="${esc(id)}">حذف</button></div>`;
+  }).join('');
+  openModal(`<h2>سلة المشتريات</h2>` + (rows
+    ? rows + `<div class="total"><span>الإجمالي</span><span>${cartTotal()} ج.م</span></div><button class="m-btn" data-act="checkout">إتمام الطلب</button>`
+    : `<div class="empty">السلة فاضية — ضيف منتجات وارجع هنا.</div>`));
+}
+
+/* ---------- صفحة المنتج ---------- */
+function showProduct(id) {
+  const p = byId(id); if (!p) return; detailQty = 1;
+  openModal(`<div class="pd"><div class="pd-img">${thumb(p)}</div><div>
+    <h2>${esc(p.name)}</h2><p>${esc(p.cat)} | ${esc(p.sub)}</p><span class="price">${p.price} ج.م</span>
+    <div class="qty"><button data-act="dminus">−</button><b id="dq">1</b><button data-act="dplus">+</button></div>
+    <button class="m-btn" data-act="dadd" data-id="${esc(id)}">أضف للسلة</button></div></div>`);
+}
+
+/* ---------- تسجيل / دخول / حساب ---------- */
+function showAuth(tab = 'login') {
+  const reg = tab === 'register';
+  openModal(`<div class="tabs"><button class="${reg ? '' : 'on'}" data-act="tlogin">تسجيل دخول</button><button class="${reg ? 'on' : ''}" data-act="treg">إنشاء حساب</button></div>
+    <form data-form="${tab}">
+      ${reg ? '<label>الاسم</label><input name="name" required>' : ''}
+      ${reg ? '<label>رقم الموبايل</label><input name="phone" inputmode="tel" placeholder="01XXXXXXXXX" required>'
+            : '<label>رقم الموبايل أو الإيميل</label><input name="phone" placeholder="01XXXXXXXXX" autocomplete="username" autocapitalize="none" required>'}
+      <label>كلمة المرور</label><input name="pass" type="password" required>
+      <div class="err" id="err"></div>
+      <button class="m-btn">${reg ? 'إنشاء الحساب' : 'دخول'}</button></form>`, true);
+}
+function showAccount() {
+  const orders = load('hm_orders', []).filter(o => o.phone === user.phone);
+  openModal(`<h2>أهلاً ${esc(user.name)}</h2><p>${esc(user.phone)}</p>
+    <h3 style="margin:14px 0 6px">طلباتي</h3>` +
+    (orders.length ? orders.map(o => `<div class="sr"><div>طلب #${o.id}<small style="display:block;color:#888">${o.date} — ${o.total} ج.م</small></div></div>`).join('') : '<div class="empty">لسه معندكش طلبات.</div>') +
+    `<button class="m-btn ghost" data-act="logout">تسجيل خروج</button>`, true);
+}
+function renderUser() {
+  $('#loginTxt').textContent = user ? user.name : 'تسجيل دخول';
+  $('#registerLink').hidden = !!user;
+}
+
+/* ---------- إتمام الطلب ---------- */
+function showCheckout() {
+  if (!Object.keys(cartData).length) return showCart();
+  if (!user) { afterAuth = showCheckout; return showAuth('login'); }   // لازم يسجل الأول
+  openModal(`<h2>إتمام الطلب</h2><form data-form="order">
+    <label>عنوان التوصيل</label><textarea name="addr" rows="2" required></textarea>
+    <label>ملاحظات (اختياري)</label><input name="note">
+    <div class="total"><span>الإجمالي</span><span>${cartTotal()} ج.م</span></div>
+    <p style="font-size:13px;color:#888">الدفع عند الاستلام</p>
+    <button class="m-btn">تأكيد الطلب</button></form>`, true);
+}
+
+/* ---------- البحث ---------- */
+function doSearch() {
+  const q = $('#searchInput').value.trim(); if (!q) return;
+  const hay = (p) => (p.name + p.en + p.cat + p.sub).toLowerCase();   // بحث عربي أو إنجليزي
+  const res = allProducts.filter(p => hay(p).includes(q.toLowerCase()));
+  openModal(`<h2>نتائج البحث عن "${esc(q)}"</h2>` + (res.length
+    ? res.map(p => `<div class="sr" data-act="prod" data-id="${esc(p.id)}"><div class="t">${thumb(p)}</div><div>${esc(p.name)}<small style="display:block;color:#888">${p.price} ج.م</small></div></div>`).join('')
+    : '<div class="empty">مفيش نتائج.</div>'));
+}
+
+/* ---------- الأوامر (أي عنصر عليه data-act) ---------- */
+const actions = {
+  close: closeModal,
+  prod: (el) => showProduct(el.dataset.id),
+  dplus: () => $('#dq').textContent = ++detailQty,
+  dminus: () => { if (detailQty > 1) $('#dq').textContent = --detailQty; },
+  dadd: (el) => { addToCart(el.dataset.id, detailQty); closeModal(); },
+  cinc: (el) => { cartData[el.dataset.id]++; saveCart(); showCart(); },
+  cdec: (el) => { if (--cartData[el.dataset.id] <= 0) delete cartData[el.dataset.id]; saveCart(); showCart(); },
+  cdel: (el) => { delete cartData[el.dataset.id]; saveCart(); showCart(); },
+  checkout: showCheckout,
+  tlogin: () => showAuth('login'),
+  treg: () => showAuth('register'),
+  logout: () => { user = null; localStorage.removeItem('hm_user'); renderUser(); closeModal(); toast('تم تسجيل الخروج'); }
+};
+modalEl.addEventListener('click', (e) => {
+  if (e.target === modalEl) return closeModal();
+  const a = e.target.closest('[data-act]'); if (a) actions[a.dataset.act]?.(a);
+});
+
+/* ---------- الفورمات ---------- */
+modalEl.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const f = Object.fromEntries(new FormData(e.target)), type = e.target.dataset.form;
+  const err = (m) => $('#err').textContent = m;
+  const users = load('hm_users', []);
+
+  if (type === 'register') {
+    if (!/^01[0125]\d{8}$/.test(f.phone)) return err('رقم الموبايل غير صحيح');
+    if (f.pass.length < 6) return err('كلمة المرور لازم 6 حروف على الأقل');
+    if (users.some(u => u.phone === f.phone)) return err('الرقم ده مسجّل قبل كده');
+    users.push({ name: f.name.trim(), phone: f.phone, pass: f.pass }); save('hm_users', users);
+    user = { name: f.name.trim(), phone: f.phone };
+  } else if (type === 'login') {
+    const u = users.find(u => u.phone === f.phone && u.pass === f.pass);
+    if (!u) return err('الرقم أو كلمة المرور غلط');
+    user = { name: u.name, phone: u.phone };
+  } else if (type === 'order') {
+    const orders = load('hm_orders', []), id = 1000 + orders.length + 1;
+    orders.push({ id, phone: user.phone, items: cartData, total: cartTotal(), addr: f.addr, note: f.note, date: new Date().toLocaleDateString('ar-EG') });
+    save('hm_orders', orders); cartData = {}; saveCart();
+    return openModal(`<div class="empty"><h2>تم استلام طلبك ✓</h2>رقم الطلب #${id}<br>هنتواصل معاك على ${esc(user.phone)}</div>`, true);
+  }
+  save('hm_user', user); renderUser(); closeModal(); toast('أهلاً ' + user.name);
+  if (afterAuth) { const fn = afterAuth; afterAuth = null; fn(); }
+});
+
+/* ---------- ربط الصفحة ---------- */
+$('#loginLink').onclick = (e) => { e.preventDefault(); user ? showAccount() : showAuth('login'); };
+$('#registerLink').onclick = (e) => { e.preventDefault(); showAuth('register'); };
+$('#cartLink').onclick = (e) => { e.preventDefault(); showCart(); };
+$('#searchBtn').onclick = doSearch;
+$('#searchInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+// ضغطة على الكارت تفتح صفحة المنتج، وعلى "أضف للسلة" تضيف مباشرة
+document.addEventListener('click', (e) => {
+  const card = e.target.closest('.card'); if (!card) return;
+  const heart = e.target.closest('.heart');
+  if (heart) {                                                   // القلب = مفضلة (بتتحفظ)
+    const favs = load('hm_favs', []), id = card.dataset.id, i = favs.indexOf(id);
+    i < 0 ? favs.push(id) : favs.splice(i, 1); save('hm_favs', favs); heart.classList.toggle('on', i < 0);
+    return;
+  }
+  e.target.closest('.add') ? addToCart(card.dataset.id) : showProduct(card.dataset.id);
+});
+
+saveCart(); renderUser();
+
+/* ============================================================
+   الصفحات الداخلية - كل لينك بيفتح صفحة حقيقية (مفيش 404)
+   ============================================================ */
+const pageEl = $('#page');
+
+
+// ✏ نصوص الصفحات التعريفية - عدّلها بمعلومات العميل
+const infoPages = {
+  'من نحن': '<p>حلو الملك بيقدّم أفضل الحلويات الشرقية والغربية والمخبوزات بأجود المكونات، وبنهتم بالطعم والجودة في كل منتج.</p>',
+  'الفروع': '<h3>فرع مكرم عبيد</h3><p>مدينة نصر، القاهرة<br>اتصل بنا: 16312</p>',
+  'وظائف': '<p>عايز تشتغل معانا؟ ابعتلنا بياناتك من صفحة "اتصل بنا" وهنراجعها.</p>',
+  'الشروط والأحكام': '<p>بإتمامك الطلب فإنت بتوافق على بيانات التوصيل والأسعار المعروضة وقت الطلب. الأسعار قابلة للتغيير. لو في مشكلة في الطلب كلمنا خلال 24 ساعة من الاستلام.</p>',
+  'سياسة الخصوصية': '<p>بنستخدم بياناتك (الاسم والموبايل والعنوان) لتوصيل طلبك والتواصل معاك بس، ومش بنشاركها مع أي جهة تانية.</p>'
+};
+
+function showPage(title, body) {
+  home.hidden = true; notFound.hidden = true; pageEl.hidden = false;
+  pageEl.innerHTML = `<div class="crumb"><a href="#" id="crumbHome">الرئيسية</a> / ${esc(title)}</div><h1 class="pg-title">${esc(title)}</h1>${body}`;
+  window.scrollTo(0, 0);
+}
+// نخلّي زرار "الرجوع للرئيسية" واللوجو يقفلوا الصفحة الداخلية كمان
+showHome = function () { pageEl.hidden = true; notFound.hidden = true; home.hidden = false; window.scrollTo(0, 0); };
+
+const grid = (list, emptyMsg) => list.length
+  ? `<div class="grid wrap">${list.map(productCard).join('')}</div>`   // productCard من script.js
+  : `<div class="empty">${emptyMsg || 'المنتجات دي هتتضاف قريباً.'}</div>`;
+
+function contactForm() {
+  return `<div class="info"><p>اتصل بنا: 16312</p>
+    <form data-form="contact"><label>الاسم</label><input name="name" required>
+    <label>الموبايل</label><input name="phone" required>
+    <label>رسالتك</label><textarea name="msg" rows="3" required></textarea>
+    <button class="m-btn">إرسال</button></form></div>`;
+}
+
+// 🧭 الراوتر: بياخد اسم اللينك ويفتح الصفحة المناسبة
+function route(label, el) {
+  if (label === 'اتصل بنا') return showPage(label, contactForm());
+  if (infoPages[label]) return showPage(label, `<div class="info">${infoPages[label]}</div>`);
+  if (label === 'عرض الكل') {                                   // "عرض الكل" جنب كل صف منتجات
+    const t = el.closest('section').querySelector('h2').textContent;
+    return showPage(t, grid(sections.find(s => s.title === t).items));
+  }
+  if (!label) return showPage('كل المنتجات', grid(allProducts));   // البانرات الإعلانية
+  if (allProducts.some(p => p.sub === label) || ['علب مشكل', 'اطباق', 'علب شرقي جاهزة'].includes(label))
+    return showPage(label, grid(allProducts.filter(p => p.sub === label)));
+  if (label === 'الخصومات') return showPage(label, grid([], 'مفيش عروض متاحة دلوقتي — تابعنا قريباً.'));
+  showPage(label, grid(allProducts.filter(p => p.cat === label)));   // أي قسم تاني
+}
+
+// قفل قوايم القائمة
+const closeDrops = () => document.querySelectorAll('.has-drop.open').forEach(l => l.classList.remove('open'));
+document.addEventListener('click', (e) => { if (!e.target.closest('.has-drop')) closeDrops(); });
+// بنلقط كل ضغطة على data-nf قبل ما script.js يفتح 404
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-nf]'); if (!el) return;
+  e.preventDefault(); e.stopImmediatePropagation();
+  const li = el.parentElement;
+  if (li.classList.contains('has-drop')) {                       // اسم القسم نفسه: يفتح/يقفل قايمته
+    const was = li.classList.contains('open'); closeDrops(); li.classList.toggle('open', !was); return;
+  }
+  closeDrops();
+  if (isMobile()) toggleMenu(false);
+  // data-go = "عرض الكل" بيودّي لصفحة القسم الأب
+  route(toAr(el.dataset.go || el.textContent.trim().replace(/\s+/g, ' ')), el);
+}, true);
+
+pageEl.addEventListener('click', (e) => { if (e.target.id === 'crumbHome') { e.preventDefault(); showHome(); } });
+pageEl.addEventListener('submit', (e) => {                       // فورم اتصل بنا
+  e.preventDefault();
+  const msgs = load('hm_msgs', []); msgs.push(Object.fromEntries(new FormData(e.target))); save('hm_msgs', msgs);
+  e.target.innerHTML = '<div class="empty">وصلتنا رسالتك ✓ هنرد عليك قريباً.</div>';
+});
+
+/* ---------- العنوان واللغة ---------- */
+const areas = ['مكرم عبيد', 'مدينة نصر', 'التجمع الخامس', 'المعادي', 'الدقي'];   // ✏ عدّل المناطق
+$('#areaTxt').textContent = load('hm_area', 'مكرم عبيد');
+$('#areaLink').onclick = (e) => {
+  e.preventDefault();
+  openModal('<h2>اختار منطقتك</h2>' + areas.map(a => `<button class="area ${a === $('#areaTxt').textContent ? 'on' : ''}" data-act="area" data-v="${a}">${a}</button>`).join(''), true);
+};
+actions.area = (el) => { save('hm_area', el.dataset.v); $('#areaTxt').textContent = el.dataset.v; closeModal(); };
+
+
+/* ---------- أسهم السلايدر + الكوكيز + زرار فوق ---------- */
+document.querySelectorAll('.car').forEach(car => {
+  const track = car.querySelector('.grid'), prev = car.querySelector('.prev'), next = car.querySelector('.next');
+  const upd = () => { prev.disabled = track.scrollLeft <= 2; next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2; };
+  prev.onclick = () => track.scrollBy({ left: -track.clientWidth * 0.8, behavior: 'smooth' });
+  next.onclick = () => track.scrollBy({ left: track.clientWidth * 0.8, behavior: 'smooth' });
+  track.addEventListener('scroll', upd); upd();
+});
+$('#ckTab').onclick = () => $('#cookies').classList.toggle('hide');
+const topBtn = $('#toTop');
+window.addEventListener('scroll', () => topBtn.classList.toggle('show', window.scrollY > 400));
+topBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+
+/* ================================================================
+   الترجمة: عربي / English
+   ================================================================ */
+/* ============================================================
+   lang.js - زرار اللغة: بيقلب الموقع كله عربي <-> إنجليزي
+   الفكرة: قاموس D (عربي ← إنجليزي). أي نص في الصفحة بيتترجم تلقائي،
+   وأي نص جديد بيظهر (نافذة، صفحة، رسالة) بيتترجم لوحده عن طريق MutationObserver.
+   لإضافة ترجمة جديدة: ضيف سطر في D.
+   ============================================================ */
+const D = {
+  // الشريط العلوي والهيدر
+  'اتصل بنا: 16312': 'Call us: 16312', 'وقت التوصيل من ٤٥ : ٦٠ دقيقة': 'Delivery time 45 - 60 minutes', 'طرق دفع سهلة': 'Easy payment methods',
+  'ابحث عن..': 'Search for..', 'تسجيل دخول': 'Login', 'انشاء حساب': 'Sign up', 'إنشاء حساب': 'Sign up', 'منتج (ات)': 'item(s)', 'تغيير': 'Change',
+  'مكرم عبيد': 'Makram Ebeid', 'مدينة نصر': 'Nasr City', 'التجمع الخامس': 'Fifth Settlement', 'المعادي': 'Maadi', 'الدقي': 'Dokki',
+  'حلو الملك': 'Helw El Malek',
+  // القائمة
+  'الخصومات': 'Offers', 'مطعم': 'Restaurant', 'حلويات مصرية': 'Egyptian Sweets', 'حلويات غربية': 'Western Sweets', 'ميكس سويت': 'Mix Sweet',
+  'مخبوزات': 'Bakery', 'شيكولاته': 'Chocolate', 'كحك 2026': 'Kahk 2026', 'المولد 2026': 'Mawlid 2026', 'آيس كريم': 'Ice Cream',
+  'بسبوسه': 'Basbousa', 'علب مشكل': 'Assorted Boxes', 'مكس شرقي': 'Oriental Mix', 'جلاش': 'Goulash', 'اطباق': 'Plates', 'كنافه': 'Kunafa',
+  'علب شرقي جاهزة': 'Ready Oriental Boxes', 'خبز': 'Bread', 'تشيز كيك': 'Cheesecake', 'بوكس': 'Box', 'كرواسون': 'Croissant', 'نص لتر': 'Half Liter',
+  'كب كيك': 'Cupcakes', 'دونات': 'Donuts', 'تارت': 'Tarts', 'علب هدايا': 'Gift Boxes', 'عرض الكل': 'View all', 'عروض اليوم': "Today's Offers", 'عروض الأسبوع': 'Weekly Offers', 'وجبات': 'Meals', 'سلطات': 'Salads',
+  'مشروبات': 'Drinks', 'ملبن': 'Malban', 'بسكوت': 'Biscuits', 'ألواح': 'Bars', 'كحك سادة': 'Plain Kahk', 'كحك بالعجمية': 'Ajamiya Kahk', 'كحك محشي': 'Stuffed Kahk',
+  'حلاوة المولد': 'Mawlid Halawa', 'علب المولد': 'Mawlid Boxes', 'عروسة المولد': 'Mawlid Doll', 'كوب': 'Cups', 'عبوات عائلية': 'Family Tubs', 'تورتات': 'Cakes',
+  // الكروت
+  'متوفر في المخزون': 'In stock', 'اضف الي عربة': 'Add to cart', 'أضف للسلة': 'Add to cart',
+  // الفوتر
+  'نصنع أفضل الحلويات الشرقية والغربية والمخبوزات بأجود المكونات.': 'We make the finest oriental and western sweets and bakery from the best ingredients.',
+  'عن الشركة': 'About', 'من نحن': 'About us', 'الفروع': 'Branches', 'وظائف': 'Careers', 'خدمة العملاء': 'Customer service', 'اتصل بنا': 'Contact us',
+  'الشروط والأحكام': 'Terms & conditions', 'سياسة الخصوصية': 'Privacy policy', 'تواصل معنا': 'Get in touch', '© 2026 جميع الحقوق محفوظة': '© 2026 All rights reserved',
+  // 404 والصفحات
+  'الصفحة دي لسه مش متاحة في النسخة التجريبية.': 'This page is not available in the demo yet.', 'الرجوع للرئيسية': 'Back to home', 'الرئيسية': 'Home', 'كل المنتجات': 'All products',
+  'المنتجات دي هتتضاف قريباً.': 'These products are coming soon.', 'مفيش عروض متاحة دلوقتي — تابعنا قريباً.': 'No offers right now — stay tuned.',
+  'حلو الملك بيقدّم أفضل الحلويات الشرقية والغربية والمخبوزات بأجود المكونات، وبنهتم بالطعم والجودة في كل منتج.': 'Helw El Malek serves the best oriental and western sweets and bakery made with the finest ingredients, and we care about taste and quality in every product.',
+  'فرع مكرم عبيد': 'Makram Ebeid branch', 'مدينة نصر، القاهرة': 'Nasr City, Cairo', 'اتصل بنا: 16312': 'Call us: 16312',
+  'عايز تشتغل معانا؟ ابعتلنا بياناتك من صفحة "اتصل بنا" وهنراجعها.': 'Want to work with us? Send your details from the "Contact us" page and we will review them.',
+  'بإتمامك الطلب فإنت بتوافق على بيانات التوصيل والأسعار المعروضة وقت الطلب. الأسعار قابلة للتغيير. لو في مشكلة في الطلب كلمنا خلال 24 ساعة من الاستلام.': 'By placing an order you agree to the delivery details and prices shown at the time of ordering. Prices may change. If there is a problem with your order, contact us within 24 hours of delivery.',
+  'بنستخدم بياناتك (الاسم والموبايل والعنوان) لتوصيل طلبك والتواصل معاك بس، ومش بنشاركها مع أي جهة تانية.': 'We use your data (name, mobile and address) only to deliver your order and contact you, and we never share it with anyone else.',
+  'اتصل بنا: 16312 — info@etoileeg.online': 'Call us: 16312 — info@etoileeg.online', 'الاسم': 'Name', 'الموبايل': 'Mobile', 'رسالتك': 'Your message', 'إرسال': 'Send',
+  'وصلتنا رسالتك ✓ هنرد عليك قريباً.': 'We got your message ✓ We will reply soon.',
+  // النوافذ
+  'سلة المشتريات': 'Shopping cart', 'الإجمالي': 'Total', 'إتمام الطلب': 'Checkout', 'حذف': 'Remove', 'السلة فاضية — ضيف منتجات وارجع هنا.': 'Your cart is empty — add some products first.',
+  'تمت الإضافة للسلة ✓': 'Added to cart ✓', 'رقم الموبايل': 'Mobile number', 'رقم الموبايل أو الإيميل': 'Mobile number or email', 'كلمة المرور': 'Password', 'دخول': 'Login', 'إنشاء الحساب': 'Create account',
+  'رقم الموبايل غير صحيح': 'Invalid mobile number', 'كلمة المرور لازم 6 حروف على الأقل': 'Password must be at least 6 characters', 'الرقم ده مسجّل قبل كده': 'This number is already registered',
+  'الرقم أو كلمة المرور غلط': 'Wrong number or password', 'طلباتي': 'My orders', 'لسه معندكش طلبات.': 'You have no orders yet.', 'تسجيل خروج': 'Logout', 'تم تسجيل الخروج': 'Logged out',
+  'عنوان التوصيل': 'Delivery address', 'ملاحظات (اختياري)': 'Notes (optional)', 'الدفع عند الاستلام': 'Cash on delivery', 'تأكيد الطلب': 'Confirm order',
+  'تم استلام طلبك ✓': 'Order received ✓', 'مفيش نتائج.': 'No results.', 'صورة المنتج': 'Product image', 'صورة': 'Image', 'اللوجو': 'Logo', 'بانر إعلاني 1': 'Promo banner 1', 'بانر إعلاني 2': 'Promo banner 2', 'اختار منطقتك': 'Choose your area'
+};
+// أسماء المنتجات وعناوين الصفوف بتتضاف تلقائي من الداتا
+sections.forEach(s => { D[s.title] = s.en; s.items.forEach(p => { D[p.name] = p.en; }); });
+Object.assign(D, window.EXTRA_EN || {});
+D['نفد المخزون'] = 'Out of stock';
+// جمل فيها أرقام أو أسماء
+const RULES = [
+  [/^تبقى فقط (\d+)$/, 'Only $1 left'], [/^(.+) ج\.م$/, '$1 EGP'], [/^أهلاً (.+)$/, 'Welcome $1'], [/^طلب #(\d+)$/, 'Order #$1'],
+  [/^رقم الطلب #(\d+)$/, 'Order number #$1'], [/^هنتواصل معاك على (.+)$/, 'We will contact you at $1'],
+  [/^نتائج البحث عن "(.*)"$/, 'Search results for "$1"'], [/^(.+) — (\d+) ج\.م$/, '$1 — $2 EGP']
+];
+const REV = Object.fromEntries(Object.entries(D).map(([a, e]) => [e, a]));
+const toAr = (s) => REV[s] || s;                                  // بيرجّع الاسم العربي (للراوتر)
+
+let lang = 'ar';
+const origText = new WeakMap();
+
+function trText(s) {                                              // يترجم نص واحد
+  const t = s.trim(); if (!t) return s;
+  let r = D[t];
+  if (r === undefined && t.includes(' | ')) { r = t.split(' | ').map(x => D[x] ?? x).join(' | '); if (r === t) r = undefined; }
+  if (r === undefined) for (const [re, to] of RULES) if (re.test(t)) { r = t.replace(re, to); break; }
+  return r === undefined ? s : s.replace(t, () => r);
+}
+function walk(root) {                                             // يترجم عقدة وكل اللي جواها
+  if (root.nodeType === 3) return fixNode(root);
+  if (root.nodeType !== 1) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let n; while ((n = w.nextNode())) { if (!/^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName)) fixNode(n); }
+  [root, ...root.querySelectorAll('[placeholder],[aria-label]')].forEach(el => ['placeholder', 'aria-label'].forEach(a => {
+    if (el.getAttribute && el.hasAttribute(a) && !el.dataset['ar' + a]) { const v = el.getAttribute(a), r = trText(v); if (r !== v) { el.dataset['ar' + a] = v; el.setAttribute(a, r); } }
+  }));
+}
+function fixNode(n) { const r = trText(n.nodeValue); if (r !== n.nodeValue) { if (!origText.has(n)) origText.set(n, n.nodeValue); n.nodeValue = r; } }
+function restore() {                                              // يرجّع الأصل العربي
+  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); let n;
+  while ((n = w.nextNode())) if (origText.has(n)) { n.nodeValue = origText.get(n); origText.delete(n); }
+  document.querySelectorAll('[data-arplaceholder],[data-aria-label],[data-ararialabel]').forEach(el => {
+    if (el.dataset.arplaceholder) { el.setAttribute('placeholder', el.dataset.arplaceholder); delete el.dataset.arplaceholder; }
+  });
+}
+// أي حاجة تتضاف للصفحة وإحنا إنجليزي تتترجم فوراً
+new MutationObserver(ms => { if (lang === 'en') ms.forEach(m => m.addedNodes.forEach(walk)); })
+  .observe(document.body, { childList: true, subtree: true });
+
+function setLang(l) {
+  lang = l; localStorage.setItem('hm_lang', l);
+  const en = l === 'en', root = document.documentElement;
+  root.lang = l; root.dir = en ? 'ltr' : 'rtl';                   // ده اللي بيقلب الاتجاه كله
+  en ? walk(document.body) : restore();
+  document.title = en ? 'Helw El Malek' : 'حلو الملك';
+  $('#flag').classList.toggle('us', !en);                         // الزرار بيعرض اللغة التانية
+  $('#langTxt').textContent = en ? 'العربية' : 'English';
+}
+$('#langLink').onclick = (e) => { e.preventDefault(); setLang(lang === 'ar' ? 'en' : 'ar'); };
+setLang(localStorage.getItem('hm_lang') || 'ar');
+
+
+/* ================================================================
+   Firebase: الحسابات والطلبات والرسائل (بتحل محل التخزين المحلي)
+   ================================================================ */
+/* shop-firebase.js - بيحل محل localStorage في الموقع: حسابات + طلبات + رسائل على Firebase */
+localStorage.removeItem('hm_user');
+auth.onAuthStateChanged(async (u) => {
+  if (!u) { user = null; renderUser(); return; }
+  try {
+    const d = await db.collection('users').doc(u.uid).get();
+    user = { uid: u.uid, name: d.exists ? d.data().name : 'عميل', phone: d.exists ? d.data().phone : '' };
+  } catch { user = { uid: u.uid, name: 'عميل', phone: '' }; }
+  renderUser();
+});
+
+showAccount = async function () {
+  openModal(`<h2>أهلاً ${esc(user.name)}</h2><p>${esc(user.phone)}</p><h3 style="margin:14px 0 6px">طلباتي</h3><div id="myOrders" class="empty">...</div><button class="m-btn ghost" data-act="logout">تسجيل خروج</button>`, true);
+  try {
+    const snap = await db.collection('orders').where('uid', '==', user.uid).get();
+    const list = snap.docs.map(d => d.data()).sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+    const box = $('#myOrders'); if (!box) return;
+    box.className = '';
+    box.innerHTML = list.length
+      ? list.map(o => `<div class="sr"><div>طلب #${o.orderNo}<small style="display:block;color:#888">${esc(o.status)} — ${o.total} ج.م</small></div></div>`).join('')
+      : '<div class="empty">لسه معندكش طلبات.</div>';
+  } catch { const b = $('#myOrders'); if (b) b.textContent = 'تعذّر تحميل الطلبات'; }
+};
+actions.logout = async () => { await auth.signOut(); closeModal(); toast('تم تسجيل الخروج'); };
+
+modalEl.addEventListener('submit', async (e) => {
+  const type = e.target.dataset.form;
+  if (!['register', 'login', 'order'].includes(type)) return;
+  e.preventDefault(); e.stopImmediatePropagation();
+  const f = Object.fromEntries(new FormData(e.target));
+  const err = (m) => { const x = $('#err'); if (x) x.textContent = m; };
+  const btn = e.target.querySelector('button.m-btn'); if (btn) btn.disabled = true;
+  try {
+    if (type === 'register') {
+      if (!/^01[0125]\d{8}$/.test(f.phone)) return err('رقم الموبايل غير صحيح');
+      if (f.pass.length < 6) return err('كلمة المرور لازم 6 حروف على الأقل');
+      const c = await auth.createUserWithEmailAndPassword(phoneEmail(f.phone), f.pass);
+      await db.collection('users').doc(c.user.uid).set({ name: f.name.trim(), phone: f.phone, createdAt: TS() });
+      user = { uid: c.user.uid, name: f.name.trim(), phone: f.phone };
+    } else if (type === 'login') {
+      // نفس الفورم للعميل (برقم الموبايل) وللأدمن (بالإيميل): لو فيه @ ده إيميل، غير كده رقم موبايل
+      const id = f.phone.trim();
+      const c = await auth.signInWithEmailAndPassword(id.includes('@') ? id : phoneEmail(id), f.pass);
+      const adm = await db.collection('admins').doc(c.user.uid).get();
+      if (adm.exists) { location.href = 'admin.html'; return; }          // أدمن ← يروح للوحة التحكم
+      const d = await db.collection('users').doc(c.user.uid).get();
+      if (!d.exists) throw { code: 'auth/user-not-found' };
+      user = { uid: c.user.uid, name: d.data().name, phone: d.data().phone };
+    } else {
+      const items = Object.entries(cartData).filter(([id]) => byId(id))
+        .map(([id, qty]) => ({ id, name: byId(id).name, cat: byId(id).cat, price: byId(id).price, qty }));
+      const orderNo = 1000 + Math.floor(Date.now() / 1000) % 1000000;
+      await db.collection('orders').add({
+        uid: user.uid, name: user.name, phone: user.phone, items, total: cartTotal(),
+        addr: f.addr, note: f.note || '', status: 'جديدة', orderNo, createdAt: TS()
+      });
+      cartData = {}; saveCart();
+      return openModal(`<div class="empty"><h2>تم استلام طلبك ✓</h2>رقم الطلب #${orderNo}<br>هنتواصل معاك على ${esc(user.phone)}</div>`, true);
+    }
+    renderUser(); closeModal(); toast('أهلاً ' + user.name);
+    if (afterAuth) { const fn = afterAuth; afterAuth = null; fn(); }
+  } catch (ex) {
+    const c = ex.code || '';
+    err(c === 'auth/email-already-in-use' ? 'الرقم ده مسجّل قبل كده'
+      : /invalid|wrong|user-not-found/.test(c) ? 'الرقم أو كلمة المرور غلط'
+      : c === 'auth/network-request-failed' ? 'مشكلة في الاتصال بالإنترنت' : 'حصلت مشكلة، حاول تاني');
+  } finally { if (btn) btn.disabled = false; }
+}, true);
+
+pageEl.addEventListener('submit', async (e) => {
+  e.preventDefault(); e.stopImmediatePropagation();
+  const data = Object.fromEntries(new FormData(e.target));
+  try {
+    await db.collection('messages').add({ ...data, read: false, createdAt: TS() });
+    e.target.innerHTML = '<div class="empty">وصلتنا رسالتك ✓ هنرد عليك قريباً.</div>';
+  } catch { toast('تعذّر الإرسال، حاول تاني'); }
+}, true);
+
+</script>
+
+<!-- شريط "فيه تحديثات" بيظهر لما الأدمن يغيّر حاجة -->
+<div id="upd" hidden onclick="location.reload()">فيه تحديثات جديدة في المتجر — اضغط للتحديث</div>
+
+<script>
+/* 1) نجيب الأقسام والمنتجات والبانرات من Firebase (لو مردش في 5 ثواني الموقع بيشتغل بالبيانات الافتراضية)
+   2) نشغّل كود الموقع
+   3) نراقب مستند settings/meta: الأدمن بيحدّثه مع كل تغيير، فيظهر الشريط للزوار */
 (function () {
-  const files = ['script.js', 'shop.js', 'lang.js', 'shop-firebase.js'];
-  const run = (i) => { if (i >= files.length) return; const s = document.createElement('script'); s.src = files[i]; s.onload = () => run(i + 1); document.body.appendChild(s); };
   const rows = (q) => q.docs.map(d => ({ id: d.id, ...d.data() }));
+  const get = (c, d) => db.collection('settings').doc('home');
   const fetchAll = Promise.all([
     db.collection('categories').orderBy('order').get(),
     db.collection('products').orderBy('order').get(),
-    db.collection('settings').doc('home').get()
-  ]).then(([c, p, s]) => { window.REMOTE = { cats: rows(c), prods: rows(p), settings: s.exists ? s.data() : {} }; });
-  Promise.race([fetchAll, new Promise(r => setTimeout(r, 5000))]).catch(() => {}).then(() => run(0));
+    db.collection('settings').doc('home').get(),
+    db.collection('settings').doc('promos').get()
+  ]).then(([c, p, s, pr]) => {
+    const cfg = s.exists ? s.data() : {};
+    if (pr.exists) cfg.promos = pr.data();
+    window.REMOTE = { cats: rows(c), prods: rows(p), settings: cfg };
+  });
+  Promise.race([fetchAll, new Promise(r => setTimeout(r, 5000))]).catch(() => {}).then(() => {
+    const s = document.createElement('script');
+    s.textContent = document.getElementById('appcode').textContent;
+    document.body.appendChild(s);
+    let first = true;
+    db.collection('settings').doc('meta').onSnapshot(() => {
+      if (first) { first = false; return; }
+      document.getElementById('upd').hidden = false;
+    }, () => {});
+  });
 })();
 </script>
 </body>
